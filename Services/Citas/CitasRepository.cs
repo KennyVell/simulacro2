@@ -39,7 +39,7 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var citas = await _context.Citas.Include(c => c.Medico).Include(c => c.Paciente).ToListAsync();
+                var citas = await _context.Citas.Include(c => c.Medico).Include(c => c.Paciente).Include(c => c.Medico.Especialidad).ToListAsync();
                 if (citas.Any())
                     return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -55,7 +55,7 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var cita = await _context.Citas.Include(c => c.Medico).Include(c => c.Paciente).FirstOrDefaultAsync(a => a.Id == id);
+                var cita = await _context.Citas.Include(c => c.Medico).Include(c => c.Paciente).Include(c => c.Medico.Especialidad).FirstOrDefaultAsync(c => c.Id == id);
                 if (cita != null)
                     return (cita, "Cita obtenida correctamente", HttpStatusCode.OK);
                 else
@@ -67,10 +67,17 @@ namespace simulacro2.Services.Citas
             }
         }
 
-        public async Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Update(Cita cita)
+        public async Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Update(CitaDTO citaDTO)
         {
             try
             {
+                var cita = new Cita {
+                    Fecha = citaDTO.Fecha,
+                    Estado = citaDTO.Estado,
+                    MedicoId = citaDTO.MedicoId,
+                    PacienteId = citaDTO.PacienteId
+                };
+
                 _context.Entry(cita).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return (cita, "Cita actualizada correctamente", HttpStatusCode.OK);

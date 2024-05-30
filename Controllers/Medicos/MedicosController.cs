@@ -1,37 +1,37 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using simulacro2.Services.Citas;
+using simulacro2.Services.Medicos;
 
-namespace simulacro2.Controllers.Citas
+namespace simulacro2.Controllers.Medicos
 {
     /* [ApiController]
     [Route("api/[controller]")] */
-    public class CitasController : ControllerBase
+    public class MedicosController : ControllerBase
     {
-        private readonly ICitasRepository _repository;
-        public CitasController(ICitasRepository repository)
+        private readonly IMedicosRepository _repository;
+        public MedicosController(IMedicosRepository repository)
         {
             _repository = repository;
         }
 
         [HttpGet]
-        [Route("api/citas")]
+        [Route("api/medicos")]
         public async Task<IActionResult> GetAll()
         {
-            var (cita, mensaje, statusCode) = await _repository.GetAll();
+            var (medico, mensaje, statusCode) = await _repository.GetAll();
             if (statusCode == HttpStatusCode.OK)
-                return Ok(cita);
+                return Ok(medico);
             else
                 return BadRequest(mensaje);
         }
 
         [HttpGet]
-        [Route("api/citas/{id}")]
+        [Route("api/medicos/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var (cita, mensaje, statusCode) = await _repository.GetById(id);
+            var (medico, mensaje, statusCode) = await _repository.GetById(id);
             if (statusCode == HttpStatusCode.OK)
-                return Ok(cita);
+                return Ok(medico);
             else
                 return BadRequest(mensaje);
         }

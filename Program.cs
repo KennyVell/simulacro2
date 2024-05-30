@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using simulacro2.Data;
 using simulacro2.Services.Citas;
+using simulacro2.Services.Especialidades;
+using simulacro2.Services.Medicos;
+using simulacro2.Services.Pacientes;
+using simulacro2.Services.Tratamientos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +24,10 @@ builder.Services.AddDbContext<ClinicaContext>(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ICitasRepository, CitasRepository>();
+builder.Services.AddScoped<IEspecialidadesRepository, EspecialidadesRepository>();
+builder.Services.AddScoped<IMedicosRepository, MedicosRepository>();
+builder.Services.AddScoped<IPacientesRepository, PacientesRepository>();
+builder.Services.AddScoped<ITratamientosRepository, TratamientosRepository>();
 
 var app = builder.Build();
 

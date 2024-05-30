@@ -4,11 +4,10 @@ namespace simulacro2.DTOs.Medicos
 {
     public class MedicoDTO
     {
-        public int Id { get; set; }
-        public string? NombreCompleto { get; set; }
-        public int EspecialidadId { get; set; }
-        public string? Correo { get; set; }
-        public string? Telefono { get; set; }
-        public string? Estado { get; set; }
+        public required string? NombreCompleto { get; set; }
+        public required int EspecialidadId { get; set; }
+        public required string? Correo { get; set; }
+        public required string? Telefono { get; set; }
+        public required string? Estado { get; set; }
     }
 }
