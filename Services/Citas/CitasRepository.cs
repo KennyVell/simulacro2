@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using simulacro2.Data;
 using simulacro2.Models;
+using simulacro2.DTOs.Citas;
 
 namespace simulacro2.Services.Citas
 {
@@ -13,11 +14,18 @@ namespace simulacro2.Services.Citas
             _context = context;
         }
 
-        public async Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Add(Cita cita)
+        public async Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Add(CitaDTO citaDTO)
         {
             try
             {
-                _context.Add(cita);
+                var cita = new Cita {
+                    Fecha = citaDTO.Fecha,
+                    Estado = citaDTO.Estado,
+                    MedicoId = citaDTO.MedicoId,
+                    PacienteId = citaDTO.PacienteId
+                };
+                
+                await _context.Citas.AddAsync(cita);
                 await _context.SaveChangesAsync();
                 return (cita, "Cita agregada correctamente", HttpStatusCode.OK);
             }
@@ -31,7 +39,7 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var citas = await _context.Citas.ToListAsync();
+                var citas = await _context.Citas.Include(c => c.Medico).Include(c => c.Paciente).ToListAsync();
                 if (citas.Any())
                     return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -47,7 +55,7 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var cita = await _context.Citas.FindAsync(id);
+                var cita = await _context.Citas.Include(c => c.Medico).Include(c => c.Paciente).FirstOrDefaultAsync(a => a.Id == id);
                 if (cita != null)
                     return (cita, "Cita obtenida correctamente", HttpStatusCode.OK);
                 else

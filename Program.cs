@@ -9,10 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Conexion a la base de datos
+// Conexión a la base de datos con resiliencia a errores transitorios
 builder.Services.AddDbContext<ClinicaContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("MyConnection"),
-    Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.20-mysql"))
+    Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.20-mysql"),
+    mySqlOptions => mySqlOptions.EnableRetryOnFailure())
 );
 
 // Servicio de los controladores
@@ -32,6 +33,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Mapeo de los controladores
+app.UseRouting();
 app.MapControllers();
 
 app.Run();

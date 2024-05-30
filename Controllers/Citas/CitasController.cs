@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using simulacro2.Services;
 using simulacro2.Services.Citas;
 
 namespace simulacro2.Controllers.Citas
@@ -26,8 +25,7 @@ namespace simulacro2.Controllers.Citas
                 return BadRequest(mensaje);
         }
 
-        [HttpGet]
-        [Route("api/citas/{id}")]
+        [HttpGet("api/citas/{id}", Name = "GetById")]
         public async Task<IActionResult> GetById(int id)
         {
             var (cita, mensaje, statusCode) = await _repository.GetById(id);
