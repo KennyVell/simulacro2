@@ -14,5 +14,12 @@ namespace simulacro2.Controllers.Citas
             _repository = repository;
         }
 
+        [HttpDelete]
+        [Route("api/citas/delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            _repository.Delete(id);
+            return Ok("Cita eliminada correctamente");
+        }
     }
 }

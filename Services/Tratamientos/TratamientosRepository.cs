@@ -20,11 +20,16 @@ namespace simulacro2.Services.Tratamientos
             throw new NotImplementedException();
         }
 
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<(IEnumerable<Tratamiento> tratamientos, string mensaje, HttpStatusCode statusCode)> GetAll()
         {
             try
             {
-                var tratamientos = await _context.Tratamientos.Include(t => t.Cita).Include(t => t.Cita.Medico).Include(t => t.Cita.Medico.Especialidad)
+                var tratamientos = await _context.Tratamientos.Include(t => t.Cita.Medico.Especialidad)
                 .Include(t => t.Cita.Paciente).Where(t => t.Estado.ToLower() == "activo").ToListAsync();
                 if (tratamientos.Any())
                     return (tratamientos, "Tratamientos obtenidos correctamente", HttpStatusCode.OK);
@@ -51,6 +56,11 @@ namespace simulacro2.Services.Tratamientos
             {
                 return (null, $"Error al obtener el tratamiento: {ex.Message}", HttpStatusCode.BadRequest);
             }
+        }
+
+        public Task<(IEnumerable<Tratamiento> tratamientos, string mensaje, HttpStatusCode statusCode)> GetDelete()
+        {
+            throw new NotImplementedException();
         }
 
         public Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> Update(TratamientoDTO tratamientoDTO)

@@ -39,7 +39,8 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var citas = await _context.Citas.Include(c => c.Medico).Include(c => c.Paciente).Include(c => c.Medico.Especialidad).ToListAsync();
+                var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
+                .Where(c => c.Estado.ToLower() != "cancelada").ToListAsync();
                 if (citas.Any())
                     return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -85,6 +86,31 @@ namespace simulacro2.Services.Citas
             catch (Exception ex)
             {
                 return (null, $"Error al actualizar la cita: {ex.Message}", HttpStatusCode.BadRequest);
+            }
+        }
+
+        public void Delete(int id)
+        {
+            var cita = _context.Citas.Find(id);            
+            cita.Estado = "cancelada";
+            _context.Entry(cita).State = EntityState.Modified;
+            _context.SaveChanges();                
+        }
+                
+        public async Task<(IEnumerable<Cita> citas, string mensaje, HttpStatusCode statusCode)> GetCanceladas()
+        {
+            try
+            {
+                var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
+                .Where(c => c.Estado.ToLower() == "cancelada").ToListAsync();
+                if (citas.Any())
+                    return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
+                else
+                    return (null, "No se encontraron citas", HttpStatusCode.NotFound);
+            }
+            catch (Exception ex)
+            {
+                return (null, $"Error al obtener las citas: {ex.Message}", HttpStatusCode.BadRequest);
             }
         }
 

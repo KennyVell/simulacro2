@@ -8,7 +8,9 @@ namespace simulacro2.Services.Medicos
     {
         Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> Add(MedicoDTO medicoDTO);
         Task<(IEnumerable<Medico> medicos, string mensaje, HttpStatusCode statusCode)> GetAll();
+        Task<(IEnumerable<Medico> medicos, string mensaje, HttpStatusCode statusCode)> GetDelete();
         Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> GetById(int id);
         Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> Update(MedicoDTO medicoDTO);
+        void Delete(int id);        
     }
 }

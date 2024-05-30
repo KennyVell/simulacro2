@@ -18,6 +18,11 @@ namespace simulacro2.Services.Medicos
             throw new NotImplementedException();
         }
 
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<(IEnumerable<Medico> medicos, string mensaje, HttpStatusCode statusCode)> GetAll()
         {
             try
@@ -49,6 +54,11 @@ namespace simulacro2.Services.Medicos
             {
                 return (null, $"Error al obtener el medico: {ex.Message}", HttpStatusCode.BadRequest);
             }
+        }
+
+        public Task<(IEnumerable<Medico> medicos, string mensaje, HttpStatusCode statusCode)> GetDelete()
+        {
+            throw new NotImplementedException();
         }
 
         public Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> Update(MedicoDTO medicoDTO)

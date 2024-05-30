@@ -55,5 +55,30 @@ namespace simulacro2.Services.Especialidades
         {
             throw new NotImplementedException();
         }
+
+        public void Delete(int id)
+        {
+            var especialidad = _context.Especialidades.Find(id);            
+            especialidad.Estado = "cancelada";
+            _context.Entry(especialidad).State = EntityState.Modified;
+            _context.SaveChanges(); 
+        }
+        
+        public async Task<(IEnumerable<Especialidad> especialidades, string mensaje, HttpStatusCode statusCode)> GetDelete()
+        {
+            try
+            {
+                var especialidades = await _context.Especialidades.Include(e => e.Medicos).Where(e => e.Estado.ToLower() == "inactivo").ToListAsync();
+                if (especialidades.Any())
+                    return (especialidades, "especialidades obtenidas correctamente", HttpStatusCode.OK);
+                else
+                    return (null, "No se encontraron especialidades", HttpStatusCode.NotFound);
+            }
+            catch (Exception ex)
+            {
+                return (null, $"Error al obtener las especialidades: {ex.Message}", HttpStatusCode.BadRequest);
+            }
+        }
+
     }
 }

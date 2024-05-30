@@ -8,7 +8,9 @@ namespace simulacro2.Services.Tratamientos
     {
         Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> Add(TratamientoDTO tratamientoDTO);
         Task<(IEnumerable<Tratamiento> tratamientos, string mensaje, HttpStatusCode statusCode)> GetAll();
+        Task<(IEnumerable<Tratamiento> tratamientos, string mensaje, HttpStatusCode statusCode)> GetDelete();
         Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> GetById(int id);
         Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> Update(TratamientoDTO tratamientoDTO);
+        void Delete(int id);      
     }
 }
