@@ -47,7 +47,7 @@ namespace simulacro2.Services.Citas
             try
             {
                 var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
-                .Where(c => c.Estado.ToLower() != "cancelada").ToListAsync();
+                .Where(c => c.Estado.ToLower() == "activo").ToListAsync();
                 if (citas.Any())
                     return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -98,11 +98,11 @@ namespace simulacro2.Services.Citas
                 {
                     cita.EstadoCita = citaDTO.EstadoCita;
                 }
-                if (citaDTO.MedicoId.HasValue)
+                if (citaDTO.MedicoId.HasValue && citaDTO.MedicoId != 0) 
                 {
                     cita.MedicoId = citaDTO.MedicoId.Value;
                 }
-                if (citaDTO.PacienteId.HasValue)
+                if (citaDTO.PacienteId.HasValue && citaDTO.MedicoId != 0)
                 {
                     cita.PacienteId = citaDTO.PacienteId.Value;
                 }
@@ -113,7 +113,7 @@ namespace simulacro2.Services.Citas
             }
             catch (Exception ex)
             {
-                return (null, $"Error al actualizar la cita: {ex.Message}", HttpStatusCode.BadRequest);
+                return (null, $"Error al actualizar la cita, los datos especificados son incorrectos: {ex.Message}", HttpStatusCode.BadRequest);
             }
         }
 
