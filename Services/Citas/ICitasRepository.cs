@@ -11,7 +11,7 @@ namespace simulacro2.Services.Citas
         Task<(IEnumerable<Cita> citas, string mensaje, HttpStatusCode statusCode)> GetAllDeleted();
         Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> GetById(int id);
         Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Update(int id, CitaDTO citaDTO);
-        void Delete(int id);
+        Task Delete(int id);
         Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Restore(int id);
     }
 }

@@ -41,20 +41,19 @@ namespace simulacro2.Services.Medicos
             }
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var medico = _context.Medicos.Find(id);            
+            var medico = await _context.Medicos.FindAsync(id);            
             medico.Estado = "inactivo";
             _context.Entry(medico).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<(IEnumerable<Medico> medicos, string mensaje, HttpStatusCode statusCode)> GetAll()
         {
             try
             {
-                var medicos = await _context.Medicos.Include(m => m.Especialidad).Include(m => m.Citas)
-                .Where(m => m.Estado.ToLower() == "activo").ToListAsync();
+                var medicos = await _context.Medicos.Include(m => m.Especialidad).Include(m => m.Citas).ToListAsync();
                 if (medicos.Any())
                     return (medicos, "Medicos obtenidos correctamente", HttpStatusCode.OK);
                 else
@@ -86,7 +85,7 @@ namespace simulacro2.Services.Medicos
         {
             try
             {
-                var medicos = await _context.Medicos.Include(m => m.Especialidad).Include(m => m.Citas)
+                var medicos = await _context.Medicos.IgnoreQueryFilters().Include(m => m.Especialidad).Include(m => m.Citas)
                 .Where(m => m.Estado.ToLower() == "inactivo").ToListAsync();
                 if (medicos.Any())
                     return (medicos, "Medicos obtenidos correctamente", HttpStatusCode.OK);
@@ -142,7 +141,7 @@ namespace simulacro2.Services.Medicos
         {
             try
             {
-                var medico = await _context.Medicos.FindAsync(id);
+                var medico = await _context.Medicos.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == id);
 
                 if (medico == null)
                 {

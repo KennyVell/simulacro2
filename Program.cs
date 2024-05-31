@@ -5,6 +5,8 @@ using simulacro2.Services.Especialidades;
 using simulacro2.Services.Medicos;
 using simulacro2.Services.Pacientes;
 using simulacro2.Services.Tratamientos;
+using simulacro2.Extensions;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,11 +25,13 @@ builder.Services.AddDbContext<ClinicaContext>(options =>
 // Servicio de los controladores
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<ICitasRepository, CitasRepository>();
+builder.Services.AddRepositories(Assembly.GetExecutingAssembly());
+
+/* builder.Services.AddScoped<ICitasRepository, CitasRepository>();
 builder.Services.AddScoped<IEspecialidadesRepository, EspecialidadesRepository>();
 builder.Services.AddScoped<IMedicosRepository, MedicosRepository>();
 builder.Services.AddScoped<IPacientesRepository, PacientesRepository>();
-builder.Services.AddScoped<ITratamientosRepository, TratamientosRepository>();
+builder.Services.AddScoped<ITratamientosRepository, TratamientosRepository>(); */
 
 var app = builder.Build();
 

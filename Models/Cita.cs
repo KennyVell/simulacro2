@@ -13,6 +13,6 @@ namespace simulacro2.Models
         public required int PacienteId { get; set; }
         public Paciente? Paciente { get; set; }
         [JsonIgnore]
-        public List<Tratamiento>? Tratamientos { get; set; }
+        public ICollection<Tratamiento>? Tratamientos { get; set; }
     }
 }

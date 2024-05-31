@@ -45,12 +45,12 @@ namespace simulacro2.Services.Tratamientos
             }
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var tratamiento = _context.Tratamientos.Find(id);            
+            var tratamiento = await _context.Tratamientos.FindAsync(id);            
             tratamiento.Estado = "inactivo";
             _context.Entry(tratamiento).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<(IEnumerable<Tratamiento> tratamientos, string mensaje, HttpStatusCode statusCode)> GetAll()
@@ -58,7 +58,7 @@ namespace simulacro2.Services.Tratamientos
             try
             {
                 var tratamientos = await _context.Tratamientos.Include(t => t.Cita.Medico.Especialidad)
-                .Include(t => t.Cita.Paciente).Where(t => t.Estado.ToLower() == "activo").ToListAsync();
+                .Include(t => t.Cita.Paciente).ToListAsync();
                 if (tratamientos.Any())
                     return (tratamientos, "Tratamientos obtenidos correctamente", HttpStatusCode.OK);
                 else
@@ -90,7 +90,7 @@ namespace simulacro2.Services.Tratamientos
         {
             try
             {
-                var tratamientos = await _context.Tratamientos.Include(t => t.Cita.Medico.Especialidad)
+                var tratamientos = await _context.Tratamientos.IgnoreQueryFilters().Include(t => t.Cita.Medico.Especialidad)
                 .Include(t => t.Cita.Paciente).Where(t => t.Estado.ToLower() == "inactivo").ToListAsync();
                 if (tratamientos.Any())
                     return (tratamientos, "Tratamientos obtenidos correctamente", HttpStatusCode.OK);
@@ -138,7 +138,7 @@ namespace simulacro2.Services.Tratamientos
         {
             try
             {
-                var tratamiento = await _context.Tratamientos.FindAsync(id);
+                var tratamiento = await _context.Tratamientos.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == id);
 
                 if (tratamiento == null)
                 {

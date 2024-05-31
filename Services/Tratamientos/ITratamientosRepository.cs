@@ -11,7 +11,7 @@ namespace simulacro2.Services.Tratamientos
         Task<(IEnumerable<Tratamiento> tratamientos, string mensaje, HttpStatusCode statusCode)> GetAllDeleted();
         Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> GetById(int id);
         Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> Update(int id, TratamientoDTO tratamientoDTO);
-        void Delete(int id);
+        Task Delete(int id);
         Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> Restore(int id);
     }
 }

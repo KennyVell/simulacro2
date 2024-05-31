@@ -11,7 +11,7 @@ namespace simulacro2.Services.Medicos
         Task<(IEnumerable<Medico> medicos, string mensaje, HttpStatusCode statusCode)> GetAllDeleted();
         Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> GetById(int id);
         Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> Update(int id, MedicoDTO medicoDTO);
-        void Delete(int id);
+        Task Delete(int id);
         Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> Restore(int id);
     }
 }

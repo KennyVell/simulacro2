@@ -16,16 +16,16 @@ namespace simulacro2.Controllers.Especialidades
 
         [HttpDelete]
         [Route("api/especialidades/delete/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             //buscamos primero y verificar que este en la base de datos
-            var result = _repository.GetById(id);
-            if (result == null)
+            var result = await _repository.GetById(id);
+            if (result.especialidad == null)
                 return NotFound($"No se encontro la especialidad con ese id {id}");
             
-            _repository.Delete(id);
-            Response.Headers.Add("X-Message", "Especialidad eliminada correctamente");
-            return StatusCode(204); // Devolver un 204 No Content para "delete"
+            await _repository.Delete(id);
+            Response.Headers.Add("Message", "Especialidad eliminada correctamente");
+            return StatusCode(StatusCodes.Status204NoContent); // Devolver un 204 No Content para "delete"
         }
     }
 }

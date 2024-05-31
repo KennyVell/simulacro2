@@ -9,6 +9,6 @@ namespace simulacro2.Models
         public required string? Descripcion { get; set; }
         public required string? Estado { get; set; }
         [JsonIgnore]
-        public List<Medico>? Medicos { get; set; }
+        public ICollection<Medico>? Medicos { get; set; }
     }
 }

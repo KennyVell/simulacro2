@@ -51,8 +51,7 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
-                .Where(c => c.Estado.ToLower() == "activo").ToListAsync();
+                var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad).ToListAsync();
                 if (citas.Any())
                     return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -118,19 +117,19 @@ namespace simulacro2.Services.Citas
             }
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var cita = _context.Citas.Find(id);
+            var cita = await _context.Citas.FindAsync(id);
             cita.Estado = "inactivo";
             _context.Entry(cita).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<(IEnumerable<Cita> citas, string mensaje, HttpStatusCode statusCode)> GetAllDeleted()
         {
             try
             {
-                var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
+                var citas = await _context.Citas.IgnoreQueryFilters().Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
                 .Where(c => c.Estado.ToLower() == "inactivo").ToListAsync();
                 if (citas.Any())
                     return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
@@ -147,7 +146,7 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var cita = await _context.Citas.FindAsync(id);
+                var cita = await _context.Citas.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == id);
 
                 if (cita == null)
                 {

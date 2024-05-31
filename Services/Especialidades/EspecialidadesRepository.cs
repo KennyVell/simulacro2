@@ -44,7 +44,7 @@ namespace simulacro2.Services.Especialidades
         {
             try
             {
-                var especialidades = await _context.Especialidades.Where(e => e.Estado.ToLower() == "activo").ToListAsync();
+                var especialidades = await _context.Especialidades.ToListAsync();
                 if (especialidades.Any())
                     return (especialidades, "especialidades obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -102,19 +102,19 @@ namespace simulacro2.Services.Especialidades
             }
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var especialidad = _context.Especialidades.Find(id);            
+            var especialidad = await _context.Especialidades.FindAsync(id);            
             especialidad.Estado = "inactivo";
             _context.Entry(especialidad).State = EntityState.Modified;
-            _context.SaveChanges(); 
+            await _context.SaveChangesAsync(); 
         }
         
         public async Task<(IEnumerable<Especialidad> especialidades, string mensaje, HttpStatusCode statusCode)> GetAllDeleted()
         {
             try
             {
-                var especialidades = await _context.Especialidades.Where(e => e.Estado.ToLower() == "inactivo").ToListAsync();
+                var especialidades = await _context.Especialidades.IgnoreQueryFilters().Where(e => e.Estado.ToLower() == "inactivo").ToListAsync();
                 if (especialidades.Any())
                     return (especialidades, "especialidades obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -130,7 +130,7 @@ namespace simulacro2.Services.Especialidades
         {
             try
             {
-                var especialidad = await _context.Especialidades.FindAsync(id);
+                var especialidad = await _context.Especialidades.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == id);
 
                 if (especialidad == null)
                 {
