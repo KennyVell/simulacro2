@@ -15,14 +15,17 @@ namespace simulacro2.Services.Tratamientos
             _context = context;
         }
 
-        public Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> Add(TratamientoDTO tratamientoDTO)
+        public Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> Add(TratamientoCreateDTO tratamientoDTO)
         {
             throw new NotImplementedException();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var tratamiento = _context.Tratamientos.Find(id);            
+            tratamiento.Estado = "inactivo";
+            _context.Entry(tratamiento).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
         public async Task<(IEnumerable<Tratamiento> tratamientos, string mensaje, HttpStatusCode statusCode)> GetAll()
@@ -58,12 +61,12 @@ namespace simulacro2.Services.Tratamientos
             }
         }
 
-        public Task<(IEnumerable<Tratamiento> tratamientos, string mensaje, HttpStatusCode statusCode)> GetDelete()
+        public async Task<(IEnumerable<Tratamiento> tratamientos, string mensaje, HttpStatusCode statusCode)> GetAllDeleted()
         {
             throw new NotImplementedException();
         }
 
-        public Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> Update(TratamientoDTO tratamientoDTO)
+        public async Task<(Tratamiento tratamiento, string mensaje, HttpStatusCode statusCode)> Update(int id, TratamientoDTO tratamientoDTO)
         {
             throw new NotImplementedException();
         }

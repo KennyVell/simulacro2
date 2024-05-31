@@ -14,9 +14,30 @@ namespace simulacro2.Services.Especialidades
             _context = context;
         }
         
-        public Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> Add(EspecialidadDTO especialidadDTO)
+        public async Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> Add(EspecialidadCreateDTO especialidad)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (especialidad.Nombre == null || especialidad.Descripcion == null)
+                {
+                    return (null, "Todos los campos son obligatorios.", HttpStatusCode.BadRequest);
+                }
+
+                var nuevaEspecialidad = new Especialidad
+                {
+                    Nombre = especialidad.Nombre,
+                    Descripcion = especialidad.Descripcion,
+                    Estado = "activo",
+                };
+
+                await _context.Especialidades.AddAsync(nuevaEspecialidad);
+                await _context.SaveChangesAsync();
+                return (nuevaEspecialidad, "Especialidad creada correctamente", HttpStatusCode.Created);
+            }
+            catch (Exception ex)
+            {
+                return (null, $"Error al crear la especialidad: {ex.Message}", HttpStatusCode.BadRequest);
+            }
         }
 
         public async Task<(IEnumerable<Especialidad> especialidades, string mensaje, HttpStatusCode statusCode)> GetAll()
@@ -51,20 +72,49 @@ namespace simulacro2.Services.Especialidades
             }
         }
 
-        public Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> Update(EspecialidadDTO especialidad)
+        public async Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> Update(int id, EspecialidadDTO especialidadDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var especialidad = await _context.Especialidades.FindAsync(id);
+                if (especialidad == null)
+                {
+                    return (null, "Especialidad no encontrada", HttpStatusCode.NotFound);
+                }
+
+                // Actualiza los campos necesarios solo si no son nulos
+                if (!string.IsNullOrEmpty(especialidadDTO.Estado))
+                {
+                    especialidad.Estado = especialidadDTO.Estado;
+                }
+                if (!string.IsNullOrEmpty(especialidadDTO.Nombre))
+                {
+                    especialidad.Nombre = especialidadDTO.Nombre;
+                }
+                if (!string.IsNullOrEmpty(especialidadDTO.Descripcion))
+                {
+                    especialidad.Descripcion = especialidadDTO.Descripcion;
+                }
+
+                _context.Entry(especialidad).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return (especialidad, "Especialidad actualizada correctamente", HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return (null, $"Error al actualizar la especialidad, los datos especificados son incorrectos: {ex.Message}", HttpStatusCode.BadRequest);
+            }
         }
 
         public void Delete(int id)
         {
             var especialidad = _context.Especialidades.Find(id);            
-            especialidad.Estado = "cancelada";
+            especialidad.Estado = "inactivo";
             _context.Entry(especialidad).State = EntityState.Modified;
             _context.SaveChanges(); 
         }
         
-        public async Task<(IEnumerable<Especialidad> especialidades, string mensaje, HttpStatusCode statusCode)> GetDelete()
+        public async Task<(IEnumerable<Especialidad> especialidades, string mensaje, HttpStatusCode statusCode)> GetAllDeleted()
         {
             try
             {
@@ -77,6 +127,30 @@ namespace simulacro2.Services.Especialidades
             catch (Exception ex)
             {
                 return (null, $"Error al obtener las especialidades: {ex.Message}", HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> Restore(int id)
+        {
+            try
+            {
+                var especialidad = await _context.Especialidades.FindAsync(id);
+
+                if (especialidad == null)
+                {
+                    return (null, "La especialidad no existe", HttpStatusCode.NotFound);
+                }
+
+                // Realizar la lógica para restaurar la especialidad, por ejemplo, cambiar el estado a "activo"
+                especialidad.Estado = "activo";
+                _context.Especialidades.Update(especialidad);
+                await _context.SaveChangesAsync();
+
+                return (especialidad, "Especialidad restaurada correctamente", HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return (null, $"Error al restaurar la especialidad: {ex.Message}", HttpStatusCode.InternalServerError);
             }
         }
 

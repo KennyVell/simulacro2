@@ -2,7 +2,7 @@
 
 namespace simulacro2.DTOs.Pacientes
 {
-    public class PacienteDTO
+    public class PacienteCreateDTO
     {
         public string? Nombres { get; set; }
         public string? Apellidos { get; set; }
@@ -10,6 +10,5 @@ namespace simulacro2.DTOs.Pacientes
         public string? Correo { get; set; }
         public string? Telefono { get; set; }
         public string? Direccion { get; set; }
-        public string? Estado { get; set; }
     }
 }

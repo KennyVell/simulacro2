@@ -13,14 +13,17 @@ namespace simulacro2.Services.Pacientes
         {
             _context = context;
         }        
-        public Task<(Paciente paciente, string mensaje, HttpStatusCode statusCode)> Add(PacienteDTO pacienteDTO)
+        public Task<(Paciente paciente, string mensaje, HttpStatusCode statusCode)> Add(PacienteCreateDTO pacienteDTO)
         {
             throw new NotImplementedException();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var paciente = _context.Pacientes.Find(id);            
+            paciente.Estado = "inactivo";
+            _context.Entry(paciente).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
         public async Task<(IEnumerable<Paciente> pacientes, string mensaje, HttpStatusCode statusCode)> GetAll()
@@ -55,12 +58,12 @@ namespace simulacro2.Services.Pacientes
             }
         }
 
-        public Task<(IEnumerable<Paciente> pacientes, string mensaje, HttpStatusCode statusCode)> GetDelete()
+        public async Task<(IEnumerable<Paciente> pacientes, string mensaje, HttpStatusCode statusCode)> GetAllDeleted()
         {
             throw new NotImplementedException();
         }
 
-        public Task<(Paciente paciente, string mensaje, HttpStatusCode statusCode)> Update(PacienteDTO pacienteDTO)
+        public async Task<(Paciente paciente, string mensaje, HttpStatusCode statusCode)> Update(int id, PacienteDTO pacienteDTO)
         {
             throw new NotImplementedException();
         }
