@@ -58,7 +58,7 @@ namespace simulacro2.Services.Tratamientos
             try
             {
                 var tratamientos = await _context.Tratamientos.Include(t => t.Cita.Medico.Especialidad)
-                .Include(t => t.Cita.Paciente).ToListAsync();
+                .Include(t => t.Cita.Paciente).Where(t => t.Estado.ToLower() == "activo").ToListAsync();
                 if (tratamientos.Any())
                     return (tratamientos, "Tratamientos obtenidos correctamente", HttpStatusCode.OK);
                 else
@@ -74,7 +74,7 @@ namespace simulacro2.Services.Tratamientos
         {
             try
             {
-                var tratamiento = await _context.Tratamientos.Include(t => t.Cita).Include(t => t.Cita.Medico).Include(t => t.Cita.Medico.Especialidad).Include(t => t.Cita.Paciente).FirstOrDefaultAsync(t => t.Id == id);
+                var tratamiento = await _context.Tratamientos.Include(t => t.Cita.Medico.Especialidad).Include(t => t.Cita.Paciente).FirstOrDefaultAsync(t => t.Id == id);
                 if (tratamiento != null)
                     return (tratamiento, "Tratamiento obtenido correctamente", HttpStatusCode.OK);
                 else
@@ -90,7 +90,7 @@ namespace simulacro2.Services.Tratamientos
         {
             try
             {
-                var tratamientos = await _context.Tratamientos.IgnoreQueryFilters().Include(t => t.Cita.Medico.Especialidad)
+                var tratamientos = await _context.Tratamientos.Include(t => t.Cita.Medico.Especialidad)
                 .Include(t => t.Cita.Paciente).Where(t => t.Estado.ToLower() == "inactivo").ToListAsync();
                 if (tratamientos.Any())
                     return (tratamientos, "Tratamientos obtenidos correctamente", HttpStatusCode.OK);
@@ -138,7 +138,7 @@ namespace simulacro2.Services.Tratamientos
         {
             try
             {
-                var tratamiento = await _context.Tratamientos.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == id);
+                var tratamiento = await _context.Tratamientos.FindAsync(id);
 
                 if (tratamiento == null)
                 {

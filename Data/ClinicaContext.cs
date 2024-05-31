@@ -12,14 +12,5 @@ namespace simulacro2.Data
         public DbSet<Medico> Medicos { get; set; }
         public DbSet<Paciente> Pacientes { get; set; }
         public DbSet<Tratamiento> Tratamientos { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Paciente>().HasQueryFilter(r => r.Estado != "inactivo");
-            modelBuilder.Entity<Medico>().HasQueryFilter(r => r.Estado != "inactivo");
-            modelBuilder.Entity<Especialidad>().HasQueryFilter(r => r.Estado != "inactivo");
-            modelBuilder.Entity<Tratamiento>().HasQueryFilter(r => r.Estado != "inactivo");
-            modelBuilder.Entity<Cita>().HasQueryFilter(r => r.Estado != "inactivo");
-        }
     }
 }

@@ -51,7 +51,8 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad).ToListAsync();
+                var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
+                .Where(c => c.Estado.ToLower() == "activo").ToListAsync();
                 if (citas.Any())
                     return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -129,7 +130,7 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var citas = await _context.Citas.IgnoreQueryFilters().Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
+                var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
                 .Where(c => c.Estado.ToLower() == "inactivo").ToListAsync();
                 if (citas.Any())
                     return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
@@ -146,7 +147,7 @@ namespace simulacro2.Services.Citas
         {
             try
             {
-                var cita = await _context.Citas.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == id);
+                var cita = await _context.Citas.FindAsync(id);
 
                 if (cita == null)
                 {

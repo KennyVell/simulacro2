@@ -44,7 +44,7 @@ namespace simulacro2.Services.Especialidades
         {
             try
             {
-                var especialidades = await _context.Especialidades.ToListAsync();
+                var especialidades = await _context.Especialidades.Where(e => e.Estado.ToLower() == "activo").ToListAsync();
                 if (especialidades.Any())
                     return (especialidades, "especialidades obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -114,7 +114,7 @@ namespace simulacro2.Services.Especialidades
         {
             try
             {
-                var especialidades = await _context.Especialidades.IgnoreQueryFilters().Where(e => e.Estado.ToLower() == "inactivo").ToListAsync();
+                var especialidades = await _context.Especialidades.Where(e => e.Estado.ToLower() == "inactivo").ToListAsync();
                 if (especialidades.Any())
                     return (especialidades, "especialidades obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -130,7 +130,7 @@ namespace simulacro2.Services.Especialidades
         {
             try
             {
-                var especialidad = await _context.Especialidades.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == id);
+                var especialidad = await _context.Especialidades.FindAsync(id);
 
                 if (especialidad == null)
                 {

@@ -56,7 +56,7 @@ namespace simulacro2.Services.Pacientes
         {
             try
             {
-                var pacientes = await _context.Pacientes.ToListAsync();
+                var pacientes = await _context.Pacientes.Where(p => p.Estado.ToLower() == "activo").ToListAsync();
                 if (pacientes.Any())
                     return (pacientes, "Pacientes obtenidos correctamente", HttpStatusCode.OK);
                 else
@@ -88,7 +88,7 @@ namespace simulacro2.Services.Pacientes
         {
             try
             {
-                var pacientes = await _context.Pacientes.IgnoreQueryFilters().Where(p => p.Estado.ToLower() == "inactivo").ToListAsync();
+                var pacientes = await _context.Pacientes.Where(p => p.Estado.ToLower() == "inactivo").ToListAsync();
                 if (pacientes.Any())
                     return (pacientes, "Pacientes obtenidos correctamente", HttpStatusCode.OK);
                 else
@@ -152,7 +152,7 @@ namespace simulacro2.Services.Pacientes
         {
             try
             {
-                var paciente = await _context.Pacientes.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == id);
+                var paciente = await _context.Pacientes.FindAsync(id);
 
                 if (paciente == null)
                 {
