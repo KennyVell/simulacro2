@@ -14,5 +14,37 @@ namespace simulacro2.Controllers.Citas
         {
             _repository = repository;
         }
+
+        [HttpPut]
+        [Route("api/citas/update/{id}")]
+        public async Task<IActionResult> UpdateCita(int id, [FromBody] CitaDTO citaDTO)
+        {
+            try
+            {
+                if (citaDTO == null)
+                {
+                    return BadRequest("Los datos de la cita son inválidos.");
+                }
+
+                var (cita, mensaje, statusCode) = await _repository.Update(id, citaDTO);
+                if (statusCode == HttpStatusCode.OK)
+                {
+                    return Ok(cita);
+                }
+                else if (statusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound(mensaje);
+                }
+                else
+                {
+                    return BadRequest(mensaje);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error actualizando el registro de cita");
+            }
+        }
     }
 }

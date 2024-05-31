@@ -17,21 +17,19 @@ namespace simulacro2.Controllers.Citas
 
         [HttpPost]
         [Route("api/citas/create")]
-        public async Task<IActionResult> AddCita([FromBody] CitaDTO citaDTO)
+        public async Task<IActionResult> AddCita([FromBody] CitaCreateDTO cita)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("La cita no puede ser nula.");
             }
 
-            var (result, mensaje, statusCode) = await _repository.Add(citaDTO);
-            if (statusCode == HttpStatusCode.OK)            
-                //return CreatedAtAction("GetById", new { id = result.Id}, result);
-                //return CreatedAtAction(nameof(CitasController.GetById), new { id = result.Id}, result);
-                //return CreatedAtAction("GetById", "CitasController", new { id = result.Id}, result);
-                return CreatedAtAction(nameof(CitasController.GetById), new { id = result.Id}, result);
+            var (result, mensaje, statusCode) = await _repository.Add(cita);
+            if (statusCode == HttpStatusCode.Created)
+                return CreatedAtAction(nameof(CitasController.GetById), "Citas", new { id = result.Id}, result);
             else
-                return BadRequest(mensaje);        
+                return BadRequest(mensaje);
         }
+
     }
 }

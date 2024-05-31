@@ -19,7 +19,8 @@ namespace simulacro2.Controllers.Citas
         public IActionResult Delete(int id)
         {
             _repository.Delete(id);
-            return Ok("Cita eliminada correctamente");
+            Response.Headers.Add("X-Message", "Cita eliminada correctamente");
+            return StatusCode(204); // Devolver un 204 No Content para "delete"
         }
     }
 }

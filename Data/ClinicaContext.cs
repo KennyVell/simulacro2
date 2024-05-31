@@ -5,7 +5,7 @@ namespace simulacro2.Data
 {
     public class ClinicaContext : DbContext
     {
-        public ClinicaContext(DbContextOptions<ClinicaContext> options) : base(options){}
+        public ClinicaContext(DbContextOptions<ClinicaContext> options) : base(options) { }
 
         public DbSet<Cita> Citas { get; set; }
         public DbSet<Especialidad> Especialidades { get; set; }

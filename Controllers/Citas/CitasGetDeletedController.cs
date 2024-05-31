@@ -6,19 +6,19 @@ namespace simulacro2.Controllers.Citas
 {
     /* [ApiController]
     [Route("api/[controller]")] */
-    public class CitasGetCanceladasController : ControllerBase
+    public class CitasGetDeletedController : ControllerBase
     {
         private readonly ICitasRepository _repository;
-        public CitasGetCanceladasController(ICitasRepository repository)
+        public CitasGetDeletedController(ICitasRepository repository)
         {
             _repository = repository;
         }
 
         [HttpGet]
-        [Route("api/citas/canceladas")]
-        public async Task<IActionResult> GetCanceladas()
+        [Route("api/citas/delete")]
+        public async Task<IActionResult> GetDeleted()
         {
-            var (cita, mensaje, statusCode) = await _repository.GetCanceladas();
+            var (cita, mensaje, statusCode) = await _repository.GetAllDeleted();
             if (statusCode == HttpStatusCode.OK)
                 return Ok(cita);
             else

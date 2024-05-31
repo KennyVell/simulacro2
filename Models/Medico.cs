@@ -12,6 +12,6 @@ namespace simulacro2.Models
         public required string? Estado { get; set; }
         public Especialidad? Especialidad { get; set; }
         [JsonIgnore]
-        public List<Cita>? Citas { get; set; }
+        public ICollection<Cita>? Citas { get; set; }
     }
 }

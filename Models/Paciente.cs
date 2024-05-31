@@ -13,6 +13,6 @@ namespace simulacro2.Models
         public required string? Direccion { get; set; }
         public required string? Estado { get; set; }
         [JsonIgnore]
-        public List<Cita>? Citas { get; set; }
+        public ICollection<Cita>? Citas { get; set; }
     }
 }

@@ -14,24 +14,31 @@ namespace simulacro2.Services.Citas
             _context = context;
         }
 
-        public async Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Add(CitaDTO citaDTO)
+        public async Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Add(CitaCreateDTO cita)
         {
             try
             {
-                var cita = new Cita {
-                    Fecha = citaDTO.Fecha,
-                    Estado = citaDTO.Estado,
-                    MedicoId = citaDTO.MedicoId,
-                    PacienteId = citaDTO.PacienteId
+                if (cita.Fecha == null || !cita.MedicoId.HasValue || !cita.PacienteId.HasValue)
+                {
+                    return (null, "Todos los campos son obligatorios.", HttpStatusCode.BadRequest);
+                }
+
+                var nuevaCita = new Cita
+                {
+                    Fecha = cita.Fecha.Value,
+                    Estado = "activo",
+                    EstadoCita = "programada",
+                    MedicoId = cita.MedicoId.Value,
+                    PacienteId = cita.PacienteId.Value
                 };
-                
-                await _context.Citas.AddAsync(cita);
+
+                await _context.Citas.AddAsync(nuevaCita);
                 await _context.SaveChangesAsync();
-                return (cita, "Cita agregada correctamente", HttpStatusCode.OK);
+                return (nuevaCita, "Cita creada correctamente", HttpStatusCode.Created);
             }
             catch (Exception ex)
             {
-                return (null, $"Error al agregar la cita: {ex.Message}", HttpStatusCode.BadRequest);
+                return (null, $"Error al crear la cita: {ex.Message}", HttpStatusCode.BadRequest);
             }
         }
 
@@ -68,16 +75,37 @@ namespace simulacro2.Services.Citas
             }
         }
 
-        public async Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Update(CitaDTO citaDTO)
+        public async Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Update(int id, CitaDTO citaDTO)
         {
             try
             {
-                var cita = new Cita {
-                    Fecha = citaDTO.Fecha,
-                    Estado = citaDTO.Estado,
-                    MedicoId = citaDTO.MedicoId,
-                    PacienteId = citaDTO.PacienteId
-                };
+                var cita = await _context.Citas.FindAsync(id);
+                if (cita == null)
+                {
+                    return (null, "Cita no encontrada", HttpStatusCode.NotFound);
+                }
+
+                // Actualiza los campos necesarios solo si no son nulos
+                if (citaDTO.Fecha != null)
+                {
+                    cita.Fecha = citaDTO.Fecha.Value;
+                }
+                if (!string.IsNullOrEmpty(citaDTO.Estado))
+                {
+                    cita.Estado = citaDTO.Estado;
+                }
+                if (!string.IsNullOrEmpty(citaDTO.EstadoCita))
+                {
+                    cita.EstadoCita = citaDTO.EstadoCita;
+                }
+                if (citaDTO.MedicoId.HasValue)
+                {
+                    cita.MedicoId = citaDTO.MedicoId.Value;
+                }
+                if (citaDTO.PacienteId.HasValue)
+                {
+                    cita.PacienteId = citaDTO.PacienteId.Value;
+                }
 
                 _context.Entry(cita).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
@@ -91,18 +119,18 @@ namespace simulacro2.Services.Citas
 
         public void Delete(int id)
         {
-            var cita = _context.Citas.Find(id);            
-            cita.Estado = "cancelada";
+            var cita = _context.Citas.Find(id);
+            cita.Estado = "inactivo";
             _context.Entry(cita).State = EntityState.Modified;
-            _context.SaveChanges();                
+            _context.SaveChanges();
         }
-                
-        public async Task<(IEnumerable<Cita> citas, string mensaje, HttpStatusCode statusCode)> GetCanceladas()
+
+        public async Task<(IEnumerable<Cita> citas, string mensaje, HttpStatusCode statusCode)> GetAllDeleted()
         {
             try
             {
                 var citas = await _context.Citas.Include(c => c.Paciente).Include(c => c.Medico.Especialidad)
-                .Where(c => c.Estado.ToLower() == "cancelada").ToListAsync();
+                .Where(c => c.Estado.ToLower() == "inactivo").ToListAsync();
                 if (citas.Any())
                     return (citas, "Citas obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -114,5 +142,28 @@ namespace simulacro2.Services.Citas
             }
         }
 
+        public async Task<(Cita cita, string mensaje, HttpStatusCode statusCode)> Restore(int id)
+        {
+            try
+            {
+                var cita = await _context.Citas.FindAsync(id);
+
+                if (cita == null)
+                {
+                    return (null, "La cita no existe", HttpStatusCode.NotFound);
+                }
+
+                // Realizar la lógica para restaurar la cita, por ejemplo, cambiar el estado a "activo"
+                cita.Estado = "activo";
+                _context.Citas.Update(cita);
+                await _context.SaveChangesAsync();
+
+                return (cita, "Cita restaurada correctamente", HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return (null, $"Error al restaurar la cita: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }
