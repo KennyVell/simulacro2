@@ -14,7 +14,7 @@ namespace simulacro2.Services.Especialidades
             _context = context;
         }
         
-        public async Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> Add(EspecialidadCreateDTO especialidad)
+        public async Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> Add(EspecialidadDTO especialidad)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace simulacro2.Services.Especialidades
         {
             try
             {
-                var especialidades = await _context.Especialidades.Include(e => e.Medicos).Where(e => e.Estado.ToLower() == "activo").ToListAsync();
+                var especialidades = await _context.Especialidades.Where(e => e.Estado.ToLower() == "activo").ToListAsync();
                 if (especialidades.Any())
                     return (especialidades, "especialidades obtenidas correctamente", HttpStatusCode.OK);
                 else
@@ -60,7 +60,7 @@ namespace simulacro2.Services.Especialidades
         {
             try
             {
-                var especialidad = await _context.Especialidades.Include(e => e.Medicos).FirstOrDefaultAsync(e => e.Id == id);
+                var especialidad = await _context.Especialidades.FirstOrDefaultAsync(e => e.Id == id);
                 if (especialidad != null)
                     return (especialidad, "Especialidad obtenida correctamente", HttpStatusCode.OK);
                 else
@@ -83,10 +83,6 @@ namespace simulacro2.Services.Especialidades
                 }
 
                 // Actualiza los campos necesarios solo si no son nulos
-                if (!string.IsNullOrEmpty(especialidadDTO.Estado))
-                {
-                    especialidad.Estado = especialidadDTO.Estado;
-                }
                 if (!string.IsNullOrEmpty(especialidadDTO.Nombre))
                 {
                     especialidad.Nombre = especialidadDTO.Nombre;
@@ -118,7 +114,7 @@ namespace simulacro2.Services.Especialidades
         {
             try
             {
-                var especialidades = await _context.Especialidades.Include(e => e.Medicos).Where(e => e.Estado.ToLower() == "inactivo").ToListAsync();
+                var especialidades = await _context.Especialidades.Where(e => e.Estado.ToLower() == "inactivo").ToListAsync();
                 if (especialidades.Any())
                     return (especialidades, "especialidades obtenidas correctamente", HttpStatusCode.OK);
                 else

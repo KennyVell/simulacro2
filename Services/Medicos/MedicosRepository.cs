@@ -13,7 +13,7 @@ namespace simulacro2.Services.Medicos
         {
             _context = context;
         }
-        public async Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> Add(MedicoCreateDTO medico)
+        public async Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> Add(MedicoDTO medico)
         {
             try
             {
@@ -22,7 +22,7 @@ namespace simulacro2.Services.Medicos
                     return (null, "Todos los campos son obligatorios.", HttpStatusCode.BadRequest);
                 }
 
-                var nuevamedico = new Medico
+                var nuevoMedico = new Medico
                 {
                     NombreCompleto = medico.NombreCompleto,
                     Correo = medico.Correo,
@@ -31,9 +31,9 @@ namespace simulacro2.Services.Medicos
                     EspecialidadId = medico.EspecialidadId.Value,
                 };
 
-                await _context.Medicos.AddAsync(nuevamedico);
+                await _context.Medicos.AddAsync(nuevoMedico);
                 await _context.SaveChangesAsync();
-                return (nuevamedico, "Medico creado correctamente", HttpStatusCode.Created);
+                return (nuevoMedico, "Medico creado correctamente", HttpStatusCode.Created);
             }
             catch (Exception ex)
             {
@@ -121,10 +121,6 @@ namespace simulacro2.Services.Medicos
                 if (!string.IsNullOrEmpty(medicoDTO.Correo))
                 {
                     medico.Correo = medicoDTO.Correo;
-                }
-                if (!string.IsNullOrEmpty(medicoDTO.Estado))
-                {
-                    medico.Estado = medicoDTO.Estado;
                 }
                 if (medicoDTO.EspecialidadId.HasValue && medicoDTO.EspecialidadId != 0) 
                 {

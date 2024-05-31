@@ -17,7 +17,7 @@ namespace simulacro2.Controllers.Medicos
 
         [HttpPost]
         [Route("api/medicos/create")]
-        public async Task<IActionResult> AddMedico([FromBody] MedicoCreateDTO medico)
+        public async Task<IActionResult> AddMedico([FromBody] MedicoDTO medico)
         {
             if (!ModelState.IsValid)
             {

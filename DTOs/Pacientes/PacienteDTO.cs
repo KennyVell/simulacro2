@@ -10,6 +10,5 @@ namespace simulacro2.DTOs.Pacientes
         public string? Correo { get; set; }
         public string? Telefono { get; set; }
         public string? Direccion { get; set; }
-        public string? Estado { get; set; }
     }
 }

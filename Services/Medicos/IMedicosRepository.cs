@@ -6,7 +6,7 @@ namespace simulacro2.Services.Medicos
 {
     public interface IMedicosRepository
     {
-        Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> Add(MedicoCreateDTO medicoDTO);
+        Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> Add(MedicoDTO medicoDTO);
         Task<(IEnumerable<Medico> medicos, string mensaje, HttpStatusCode statusCode)> GetAll();
         Task<(IEnumerable<Medico> medicos, string mensaje, HttpStatusCode statusCode)> GetAllDeleted();
         Task<(Medico medico, string mensaje, HttpStatusCode statusCode)> GetById(int id);

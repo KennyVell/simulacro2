@@ -17,7 +17,7 @@ namespace simulacro2.Controllers.Especialidades
 
         [HttpPost]
         [Route("api/especialidades/create")]
-        public async Task<IActionResult> AddEspecialidad([FromBody] EspecialidadCreateDTO especialidad)
+        public async Task<IActionResult> AddEspecialidad([FromBody] EspecialidadDTO especialidad)
         {
             if (!ModelState.IsValid)
             {

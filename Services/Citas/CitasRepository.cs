@@ -23,6 +23,11 @@ namespace simulacro2.Services.Citas
                     return (null, "Todos los campos son obligatorios.", HttpStatusCode.BadRequest);
                 }
 
+                if (cita.MedicoId.Value == 0 || cita.PacienteId.Value == 0) 
+                {
+                    return (null, "Los campos ingresados son invalidos", HttpStatusCode.BadRequest);
+                }
+
                 var nuevaCita = new Cita
                 {
                     Fecha = cita.Fecha.Value,
@@ -89,10 +94,6 @@ namespace simulacro2.Services.Citas
                 if (citaDTO.Fecha != null)
                 {
                     cita.Fecha = citaDTO.Fecha.Value;
-                }
-                if (!string.IsNullOrEmpty(citaDTO.Estado))
-                {
-                    cita.Estado = citaDTO.Estado;
                 }
                 if (!string.IsNullOrEmpty(citaDTO.EstadoCita))
                 {

@@ -6,7 +6,7 @@ namespace simulacro2.Services.Especialidades
 {
     public interface IEspecialidadesRepository
     {
-        Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> Add(EspecialidadCreateDTO especialidadDTO);
+        Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> Add(EspecialidadDTO especialidadDTO);
         Task<(IEnumerable<Especialidad> especialidades, string mensaje, HttpStatusCode statusCode)> GetAll();
         Task<(IEnumerable<Especialidad> especialidades, string mensaje, HttpStatusCode statusCode)> GetAllDeleted();
         Task<(Especialidad especialidad, string mensaje, HttpStatusCode statusCode)> GetById(int id);
